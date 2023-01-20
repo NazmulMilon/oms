@@ -29,3 +29,14 @@ class DiscountType(BaseEnum):
 class AddressType(BaseEnum):
     SHIPPING_ADDRESS = "shipping"
     BILLING_ADDRESS = "billing"
+    # SHIPPING_ADDRESS = 1
+    # BILLING_ADDRESS = 2
+
+
+class TaskStatusType(BaseEnum):
+    ASSIGNED = "assigned"
+    NOT_ASSIGN = "not_assigned"
+    COMPLETED = "completed"
+    RUNNING = "running"
+    PAUSE = "pause"
+

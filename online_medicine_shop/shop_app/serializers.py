@@ -153,6 +153,12 @@ class AddressListSerializer(ModelSerializer):
 
 
 class AddressRetrieveSerializer(ModelSerializer):
+    # orders = SerializerMethodField()
+    #
+    # def get_orders(self, instance):
+    #     order_queryset = Order.objects.filter(id=instance.orders_id)
+    #     return OrderDetailSerializer(order_queryset, many=True).data
+
     class Meta:
         model = Address
         exclude = ['created_at', 'updated_at']

@@ -54,19 +54,6 @@ class Coupon(BaseModel):
         db_table = 'coupons'
 
 
-class Address(BaseModel):
-    address = models.CharField(max_length=500, help_text='address of the of user')
-    upazila = models.TextField(help_text=' Upazila name of the user')
-    district = models.TextField(help_text='District name of the user')
-    division = models.TextField(help_text='Division name of the user')
-    contact_no = models.IntegerField(help_text='user mobile number')
-    address_type = models.CharField(max_length=10, choices=AddressType.choices(), default=AddressType.SHIPPING_ADDRESS.
-                                    value)
-
-    class Meta:
-        db_table = 'addresses'
-
-
 class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, help_text=' user id')
     total_quantity = models.IntegerField(help_text='amount of products want to order')
@@ -76,3 +63,16 @@ class Order(BaseModel):
     class Meta:
         db_table = 'orders'
 
+
+class Address(BaseModel):
+    address = models.CharField(max_length=500, help_text='address of the of user')
+    upazila = models.TextField(help_text=' Upazila name of the user')
+    district = models.TextField(help_text='District name of the user')
+    division = models.TextField(help_text='Division name of the user')
+    contact_no = models.IntegerField(help_text='user mobile number')
+    address_type = models.CharField(max_length=50, choices=AddressType.choices(),
+                                    default=AddressType.SHIPPING_ADDRESS.value)
+    orders = models.ForeignKey(Order, on_delete=models.CASCADE, help_text='order info')
+
+    class Meta:
+        db_table = 'addresses'

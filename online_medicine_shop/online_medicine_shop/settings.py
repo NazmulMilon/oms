@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop_app',
     'systems',
+    'tasks',
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',

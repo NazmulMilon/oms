@@ -439,9 +439,10 @@ class AddressCreateAPIView(CreateAPIView):
         division = data.get('division', None)
         contact_no = data.get('contact_no', None)
         address_type = data.get('address_type', None)
+        orders = data.get('orders', None)
 
         address_obj = Address(address=address, upazila=upazila, district=district, division=division,
-                              contact_no=contact_no, address_type=address_type)
+                              contact_no=contact_no, address_type=address_type, orders=orders)
         address_obj.save()
         serializer = AddressCreateSerializer(address_obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
