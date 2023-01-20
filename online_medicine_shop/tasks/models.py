@@ -15,7 +15,7 @@ class Task(BaseModel):
     title = models.CharField(max_length=200, help_text=' title of the task')
     category = models.ForeignKey(TaskCategory, on_delete=models.CASCADE, help_text='task category name')
     start_date = models.DateTimeField(auto_created=True, help_text='task started date')
-    end_data = models.DateTimeField(auto_created=True, help_text=' task end date')
+    end_date = models.DateTimeField(auto_created=True, help_text=' task end date')
     assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_tasks',
                                     help_text='person who assigned the task')
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks',
