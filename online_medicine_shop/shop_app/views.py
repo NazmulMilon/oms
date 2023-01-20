@@ -331,9 +331,9 @@ class OrderCreateAPIView(CreateAPIView):
 
 
 class OrderUpdateAPIView(UpdateAPIView):
-    permission_classes = [AllowAny, ]
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
+    permission_classes = [AllowAny, ]
 
     @swagger_auto_schema(tags=['Order'])
     def put(self, request, *args, **kwargs):

@@ -45,6 +45,21 @@ class TaskCategoryCreateAPIView(CreateAPIView):
         return Response(data={'details': 'Task Category Created'}, status=status.HTTP_201_CREATED)
 
 
+class TaskCategoryUpdateAPIView(UpdateAPIView):
+    serializer_class = TaskCategoryRetrieveSerializer
+    queryset = TaskCategory.objects.all()
+
+    @swagger_auto_schema(tags=['Task Category'])
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        pk = kwargs.get('pk', None)
+        # category_obj = TaskCategory.objects.filter(pk=pk).update(**data)
+        category_obj = TaskCategory.objects.filter(pk=pk).first()
+        category_obj.category_name = data['category_name']
+        category_obj.save()
+        return Response(data={'details': 'Task Category Updated'}, status=status.HTTP_200_OK)
+
+
 class TaskListAPIView(ListAPIView):
     serializer_class = TaskListSerializer
     queryset = Task.objects.all()
