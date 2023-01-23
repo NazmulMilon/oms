@@ -50,7 +50,7 @@ class BrandRetrieveAPIView(RetrieveAPIView):
 class BrandListAPIView(ListAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [AllowAny, ]
 
     @swagger_auto_schema(tags=['Brand'])
     def get(self, request, *args, **kwargs):
@@ -65,12 +65,19 @@ class BrandUpdateAPIView(UpdateAPIView):
     queryset = Brand.objects.all()
 
     @swagger_auto_schema(tags=['Brand'])
+    # def put(self, request, *args, **kwargs):
+    #     pk = kwargs.get('pk', None)
+    #     # brand_queryset = Brand.objects.filter(pk=pk).update(**request.data)
+    #     brand_queryset = Brand.objects.filter(pk=pk)
+    #     brand_obj = brand_queryset.update(**request.data)
+    #     return Response(data={'details': 'Brand name updated'})
     def put(self, request, *args, **kwargs):
+        data = request.data
         pk = kwargs.get('pk', None)
-        # brand_queryset = Brand.objects.filter(pk=pk).update(**request.data)
-        brand_queryset = Brand.objects.filter(pk=pk)
-        brand_obj = brand_queryset.update(**request.data)
-        return Response(data={'details': 'Brand name updated'})
+        brand_obj = Brand.objects.filter(pk=pk).first()
+        brand_obj.brand_title = data['brand_title']
+        brand_obj.save()
+        return Response(data={'details': 'Brand name updated'}, status=status.HTTP_200_OK)
 
 
 class CategoryListAPIView(ListAPIView):

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Task, TaskCategory
 from .serilizers import TaskCategoryCreateSerializer, TaskCategoryListSerializer, TaskCategoryRetrieveSerializer, \
     TaskListSerializer, TaskCreateSerializer, TaskRetrieveSerializer
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -60,6 +60,16 @@ class TaskCategoryUpdateAPIView(UpdateAPIView):
         return Response(data={'details': 'Task Category Updated'}, status=status.HTTP_200_OK)
 
 
+class TaskCategoryDeleteAPIView(DestroyAPIView):
+    queryset = TaskCategory.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        category_obj = TaskCategory.objects.filter(pk=pk).first()
+        category_obj.delete()
+        return Response(data={'details': 'Task Category objects deleted.'}, status=status.HTTP_204_NO_CONTENT)
+
+
 class TaskListAPIView(ListAPIView):
     serializer_class = TaskListSerializer
     queryset = Task.objects.all()
@@ -104,3 +114,46 @@ class TaskCreateAPIView(CreateAPIView):
         task_obj.save()
         serializer = TaskRetrieveSerializer(task_obj)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class TaskUpdateAPIView(UpdateAPIView):
+    serializer_class = TaskCreateSerializer
+    queryset = Task.objects.all()
+
+    @swagger_auto_schema(tags=['Task'])
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        pk = kwargs.get('pk', None)
+        # Task.objects.filter(pk=pk).update(**data)
+        # abc = task_obj
+        # return Response(data={'details': 'Task Category Updated'}, status=status.HTTP_200_OK)
+
+        task_obj = Task.objects.filter(pk=pk).first()
+        task_obj.title = data['title']
+        # task_obj.save()
+        task_obj.category.category_name = data['category']
+        task_obj.category.save()
+        task_obj.start_date = data['start_date']
+        # task_obj.save()
+        task_obj.end_date = data['end_date']
+        # task_obj.save()
+        task_obj.assigned_by.id = data['assigned_by']
+        task_obj.assigned_to.save()
+        task_obj.assigned_to.id = data['assigned_to']
+        task_obj.assigned_to.save()
+        task_obj.details = data['details']
+        # task_obj.save()
+        task_obj.task_status = data['task_status']
+        task_obj.save()
+        return Response(data={'details': 'Task details Updated'}, status=status.HTTP_200_OK)
+
+
+class TaskDeleteAPIView(DestroyAPIView):
+    queryset = Task.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        task_obj = Task.objects.filter(pk=pk).first()
+        task_obj.delete()
+        return Response(data={'details': 'Task object deleted. '}, status=status.HTTP_204_NO_CONTENT)
+
