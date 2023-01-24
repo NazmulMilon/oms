@@ -3,17 +3,19 @@ import json
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
-from .models import Brand, Category, Product, Cart, Coupon, Order, Address
+from .models import Brand, Category, Product, Cart, Coupon, Order, Address, Image
 from .serializers import BrandCreateSerializer, BrandListSerializer, CategoryListSerializer, CategoryDetailSerializer, \
     CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer, ProductDetailSerializer, \
     CartDetailSerializer, CartListSerializer, OrderDetailSerializer, OrderListSerializer, CouponListSerializer, \
-    CouponDetailSerializer, AddressCreateSerializer, AddressListSerializer, AddressRetrieveSerializer
+    CouponDetailSerializer, AddressCreateSerializer, AddressListSerializer, AddressRetrieveSerializer, ImageSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import IsAuthenticated, AllowAny
-
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import viewsets
+# from rest_framework.viewsets import ModelViewSet
 
 # Create your views here.
 
@@ -50,7 +52,7 @@ class BrandRetrieveAPIView(RetrieveAPIView):
 class BrandListAPIView(ListAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
-    permission_classes = [AllowAny, ]
+    permission_classes = [IsAuthenticated, ]
 
     @swagger_auto_schema(tags=['Brand'])
     def get(self, request, *args, **kwargs):
@@ -133,7 +135,7 @@ class CategoryUpdateAPIView(UpdateAPIView):
 
 
 class ProductListAPIView(ListAPIView):
-    permission_classes = [AllowAny, ]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = ProductListSerializer
     queryset = Product.objects.all()
 
@@ -172,7 +174,7 @@ class ProductCreateAPIView(CreateAPIView):
 
 
 class ProductRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [AllowAny, ]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = ProductDetailSerializer
     queryset = Product.objects.all()
 
@@ -465,3 +467,40 @@ class AddressUpdateAPIView(UpdateAPIView):
         pk = kwargs.get('pk', None)
         address_obj = Address.objects.filter(pk=pk).update(**request.data)
         return Response(data={'details': 'Address detail Updated'}, status=status.HTTP_200_OK)
+
+
+# class ImageCreateViewSet(viewsets.ModelViewSet):
+#     queryset = Image.objects.all()
+#     serializer_class = ImageSerializer
+#     parser_classes = (MultiPartParser, FormParser)
+#
+#     def perform_create(self, serializer):
+#         serializer.save(creator=self.request.user)
+
+
+class ImageListAPIView(ListAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get(self, request, *args, **kwargs):
+        queryset = Image.objects.all()
+        serializer = ImageSerializer(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class ImageCreateAPIView(CreateAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        creator = data.get('creator', None)
+        title = data.get('title', None)
+        description = data.get('description', None)
+        upload_image = data.get('upload_image', None)
+
+        image_obj = Image(creator_id=creator, title=title, description=description, upload_image=upload_image)
+        image_obj.save()
+        serializer = ImageSerializer(image_obj)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)

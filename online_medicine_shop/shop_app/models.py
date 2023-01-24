@@ -76,3 +76,17 @@ class Address(BaseModel):
 
     class Meta:
         db_table = 'addresses'
+#
+# # lets us explicitly set upload path and filename
+# def upload_to(instance, filename):
+#     return 'images/{filename}'.format(filename=filename)
+
+
+class Image(BaseModel):
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, help_text='image uploader')
+    title = models.CharField(max_length=100, blank=False, null=False)
+    description = models.TextField()
+    upload_image = models.ImageField(upload_to='images/', blank=True, null=True)
+
+    class Meta:
+        db_table = 'images'

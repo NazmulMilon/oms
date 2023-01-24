@@ -1,12 +1,12 @@
 
 from django.urls import path
-from . import views
+# from . import views
 from .views import BrandCreateAPIView, BrandRetrieveAPIView, BrandListAPIView, BrandUpdateAPIView, CategoryListAPIView, \
     CategoryRetrieveAPIView, CategoryCreateAPIView, CategoryUpdateAPIView, ProductListAPIView, ProductCreateAPIView, \
     ProductRetrieveAPIView, ProductUpdateAPIView, CartListAPIView, CartCreateAPIView, CartRetrieveAPIView, \
     CartUpdateAPIView, OrderListAPIView, OrderRetrieveAPIView, OrderCreateAPIView, OrderUpdateAPIView, CouponListAPIView, \
     CouponRetrieveAPIView, CouponCreateAPIView, CouponUpdateAPIView, AddressListAPIView, AddressRetrieveAPIView, \
-    AddressCreateAPIView, AddressUpdateAPIView
+    AddressCreateAPIView, AddressUpdateAPIView, ImageListAPIView, ImageCreateAPIView
 urlpatterns = [
     path('brand/create/', BrandCreateAPIView.as_view(), name='brand_create'),
     path('brand/detail/<int:pk>/', BrandRetrieveAPIView.as_view(), name='brand_details'),
@@ -42,6 +42,11 @@ urlpatterns = [
     path('address/detail/<int:pk>/', AddressRetrieveAPIView.as_view(), name='detail_address'),
     path('address/create/', AddressCreateAPIView.as_view(), name='create_address'),
     path('address/update/<int:pk>/', AddressUpdateAPIView.as_view(), name='update_address'),
+
+
+    path('image/list/all/', ImageListAPIView.as_view(), name='image_list'),
+    # path('image/create/', ImageCreateViewSet.as_view({'get': 'create'}), name='image_create'),
+    path('image/create/', ImageCreateAPIView.as_view(), name='image_create'),
 
 
 ]

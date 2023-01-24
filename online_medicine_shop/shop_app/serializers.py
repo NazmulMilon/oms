@@ -2,7 +2,7 @@ import json
 
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from .models import Category, Brand, Product, Coupon, Cart, Order, Address
+from .models import Category, Brand, Product, Coupon, Cart, Order, Address, Image
 from rest_framework.serializers import SerializerMethodField
 
 
@@ -167,4 +167,12 @@ class AddressRetrieveSerializer(ModelSerializer):
 class AddressCreateSerializer(ModelSerializer):
     class Meta:
         model = Address
+        exclude = ['created_at', 'updated_at']
+
+
+class ImageSerializer(ModelSerializer):
+    # image_url = serializers.ImageField(required=False)
+
+    class Meta:
+        model = Image
         exclude = ['created_at', 'updated_at']
