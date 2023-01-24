@@ -499,6 +499,7 @@ class ImageListAPIView(ListAPIView):
 class ImageCreateAPIView(CreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticated, ]
 
     @swagger_auto_schema(tags=['Images'])

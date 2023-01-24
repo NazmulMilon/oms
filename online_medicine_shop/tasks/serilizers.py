@@ -34,6 +34,6 @@ class TaskRetrieveSerializer(ModelSerializer):
 
 
 class TaskCreateSerializer(ModelSerializer):
-    class Mata:
+    class Meta:
         model = Task
         exclude = ['created_at', 'updated_at']

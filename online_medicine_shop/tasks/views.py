@@ -63,6 +63,7 @@ class TaskCategoryUpdateAPIView(UpdateAPIView):
 class TaskCategoryDeleteAPIView(DestroyAPIView):
     queryset = TaskCategory.objects.all()
 
+    @swagger_auto_schema(tags=['Task Category'])
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         category_obj = TaskCategory.objects.filter(pk=pk).first()
@@ -98,6 +99,7 @@ class TaskCreateAPIView(CreateAPIView):
     serializer_class = TaskCreateSerializer
     queryset = Task.objects.all()
 
+    @swagger_auto_schema(tags=['Task'])
     def post(self, request, *args, **kwargs):
         data = request.data
         title = data.get('title', None)
@@ -151,6 +153,7 @@ class TaskUpdateAPIView(UpdateAPIView):
 class TaskDeleteAPIView(DestroyAPIView):
     queryset = Task.objects.all()
 
+    @swagger_auto_schema(tags=['Task'])
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         task_obj = Task.objects.filter(pk=pk).first()
