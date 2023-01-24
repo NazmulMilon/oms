@@ -15,6 +15,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets
+
+
 # from rest_framework.viewsets import ModelViewSet
 
 # Create your views here.
@@ -481,18 +483,25 @@ class AddressUpdateAPIView(UpdateAPIView):
 class ImageListAPIView(ListAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated, ]
 
+    @swagger_auto_schema(tags=['Images'])
     def get(self, request, *args, **kwargs):
         queryset = Image.objects.all()
         serializer = ImageSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+"""https://medium.com/apis-with-valentine/all-types-of-post-requests-with-postman-1cd2307ed6aa"""
+"""https://dev.to/thomz/uploading-images-to-django-rest-framework-from-forms-in-react-3jhj"""
+
+
 class ImageCreateAPIView(CreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+    permission_classes = [IsAuthenticated, ]
 
+    @swagger_auto_schema(tags=['Images'])
     def post(self, request, *args, **kwargs):
         data = request.data
         creator = data.get('creator', None)
@@ -504,3 +513,35 @@ class ImageCreateAPIView(CreateAPIView):
         image_obj.save()
         serializer = ImageSerializer(image_obj)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ImageRetrieveAPIView(RetrieveAPIView):
+    serializer_class = ImageSerializer
+    queryset = Image.objects.all()
+
+    @swagger_auto_schema(tags=['Images'])
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        image_obj = Image.objects.filter(pk=pk).first()
+        if image_obj is None:
+            return Response(data={'details': 'No image details found.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ImageSerializer(image_obj)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class ImageUpdateAPIView(UpdateAPIView):
+    serializer_class = ImageSerializer
+    queryset = Image.objects.all()
+
+    @swagger_auto_schema(tags=['Images'])
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        pk = kwargs.get('pk', None)
+        image_obj = Image.objects.filter(pk=pk).first()
+        image_obj.creator.creator_id = data['creator']
+        image_obj.creator.save()
+        image_obj.title = data['title']
+        image_obj.description = data['description']
+        image_obj.upload_image = data['upload_image']
+        image_obj.save()
+        return Response(data={'details': 'Image data updated. '}, status=status.HTTP_200_OK)

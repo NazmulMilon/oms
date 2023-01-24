@@ -6,7 +6,8 @@ from .views import BrandCreateAPIView, BrandRetrieveAPIView, BrandListAPIView, B
     ProductRetrieveAPIView, ProductUpdateAPIView, CartListAPIView, CartCreateAPIView, CartRetrieveAPIView, \
     CartUpdateAPIView, OrderListAPIView, OrderRetrieveAPIView, OrderCreateAPIView, OrderUpdateAPIView, CouponListAPIView, \
     CouponRetrieveAPIView, CouponCreateAPIView, CouponUpdateAPIView, AddressListAPIView, AddressRetrieveAPIView, \
-    AddressCreateAPIView, AddressUpdateAPIView, ImageListAPIView, ImageCreateAPIView
+    AddressCreateAPIView, AddressUpdateAPIView, ImageListAPIView, ImageCreateAPIView, ImageRetrieveAPIView, \
+    ImageUpdateAPIView
 urlpatterns = [
     path('brand/create/', BrandCreateAPIView.as_view(), name='brand_create'),
     path('brand/detail/<int:pk>/', BrandRetrieveAPIView.as_view(), name='brand_details'),
@@ -47,6 +48,8 @@ urlpatterns = [
     path('image/list/all/', ImageListAPIView.as_view(), name='image_list'),
     # path('image/create/', ImageCreateViewSet.as_view({'get': 'create'}), name='image_create'),
     path('image/create/', ImageCreateAPIView.as_view(), name='image_create'),
+    path('image/detail/<int:pk>/', ImageRetrieveAPIView.as_view(), name='image_retrieve'),
+    path('image/update/<int:pk>/', ImageUpdateAPIView.as_view(), name='image_update'),
 
 
 ]
