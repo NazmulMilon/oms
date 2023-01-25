@@ -176,6 +176,7 @@ SIMPLE_JWT = {
 }
 
 SWAGGER_SETTINGS = {
+    'VALIDATOR_URL': 'http://localhost:8189',
     'SECURITY_DEFINITIONS': {
         'JWT': {
             'type': 'apiKey',
